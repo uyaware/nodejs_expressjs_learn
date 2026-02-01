@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import {
+  getAllRoles,
   getAllUsers,
   handleCreateUser,
   handleDeleteUser,
@@ -7,22 +8,24 @@ import {
   handleViewUser,
 } from "@/services/user-services";
 
-
-
 export async function getHomePage(req: Request, res: Response) {
   const users = await getAllUsers();
   return res.render("home.ejs", {
-    users: users,
+    users,
   });
 }
 
-export function getCreateUserPage(req: Request, res: Response) {
-  return res.render("create-user.ejs");
+export async function getCreateUserPage(req: Request, res: Response) {
+  const roles = await getAllRoles();
+  return res.render("admin/user/create.ejs", {
+    roles,
+  });
 }
 
 export async function postCreateUser(req: Request, res: Response) {
-  const { name, email, address } = req.body;
-  await handleCreateUser(name, email, address);
+  const { fullName, username, phone, role, address } = req.body;
+  // await handleCreateUser(name, email, address);
+  // return res.redirect("/");
   return res.redirect("/");
 }
 
@@ -43,5 +46,5 @@ export async function getViewUser(req: Request, res: Response) {
 export async function postUpdateUser(req: Request, res: Response) {
   const { id, name, email, address } = req.body;
   await handleUpdateUserById(id, name, email, address);
-  res.redirect('/');
+  res.redirect("/");
 }

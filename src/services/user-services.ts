@@ -6,21 +6,27 @@ export async function handleCreateUser(
   email: string,
   address: string,
 ) {
-  await prisma.users.create({
+  await prisma.user.create({
     data: {
-      name,
-      email,
+      fullName: name,
+      username: email,
+      password: "123",
+      accountType: "SYSTEM",
       address,
     },
   });
 }
 
 export async function getAllUsers() {
-  return await prisma.users.findMany();
+  return await prisma.user.findMany();
+}
+
+export async function getAllRoles() {
+  return await prisma.role.findMany();
 }
 
 export async function handleDeleteUser(id: number) {
-  await prisma.users.delete({
+  await prisma.user.delete({
     where: {
       id,
     },
@@ -28,7 +34,7 @@ export async function handleDeleteUser(id: number) {
 }
 
 export async function handleViewUser(id: number) {
-  return await prisma.users.findUnique({
+  return await prisma.user.findUnique({
     where: {
       id,
     },
@@ -41,13 +47,13 @@ export async function handleUpdateUserById(
   email: string,
   address: string,
 ) {
-  await prisma.users.update({
+  await prisma.user.update({
     where: {
       id: +id,
     },
     data: {
-      name,
-      email,
+      fullName: name,
+      username: email,
       address,
     },
   });

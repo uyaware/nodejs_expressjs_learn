@@ -1,10 +1,10 @@
 import express from "express";
 import 'dotenv/config';
 import webRoutes from "@/routes/web";
+import { initData } from "./config/seed";
 
 const app = express();
 const port = process.env.PORT;
-
 
 // config template engine 
 app.set('view engine', 'ejs');
@@ -16,6 +16,9 @@ app.use(express.urlencoded({ extended: true }));
 
 // config routes
 webRoutes(app);
+
+// seed data
+initData();
 
 // config static files
 app.use(express.static('public'));
