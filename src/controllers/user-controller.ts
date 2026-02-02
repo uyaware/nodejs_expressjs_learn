@@ -7,11 +7,13 @@ import {
   handleUpdateUserById,
   handleViewUser,
 } from "@/services/user-services";
+import { getAllProducts } from "@/services/product-services";
 
 export async function getHomePage(req: Request, res: Response) {
-  const users = await getAllUsers();
-  return res.render("home.ejs", {
-    users,
+  const products = await getAllProducts();
+
+  return res.render("client/home/show.ejs", {
+    products
   });
 }
 
@@ -24,27 +26,35 @@ export async function getCreateUserPage(req: Request, res: Response) {
 
 export async function postCreateUser(req: Request, res: Response) {
   const { fullName, username, phone, role, address } = req.body;
-  // await handleCreateUser(name, email, address);
-  // return res.redirect("/");
-  return res.redirect("/");
+
+  const avatar = req.file ? req.file.filename : "default.png";
+
+  await handleCreateUser(fullName, username, address, phone, avatar, +role);
+
+  return res.redirect("/admin/user");
 }
 
 export async function postDeleteUser(req: Request, res: Response) {
-  const id = Number(req.params.id);
-  await handleDeleteUser(id);
-  return res.redirect("/");
+  const { id } = req.params;
+  await handleDeleteUser(+id);
+  return res.redirect("/admin/user");
 }
 
 export async function getViewUser(req: Request, res: Response) {
   const id = Number(req.params.id);
-  const user = await handleViewUser(id);
-  return res.render("view-user.ejs", {
-    user: user,
+  const { user, roles } = await handleViewUser(id);
+  return res.render("admin/user/detail.ejs", {
+    user,
+    roles,
   });
 }
 
 export async function postUpdateUser(req: Request, res: Response) {
-  const { id, name, email, address } = req.body;
-  await handleUpdateUserById(id, name, email, address);
-  res.redirect("/");
+  const { id, fullName, phone, role, address } = req.body;
+
+  const avatar = req.file ? req.file.filename : "default.png";
+
+  await handleUpdateUserById(+id, fullName, address, phone, avatar, +role);
+
+  return res.redirect("/admin/user");
 }

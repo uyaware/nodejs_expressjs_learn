@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
   <meta name="description" content="Hỏi Dân IT - Dự án laptopshop" />
   <meta name="author" content="Hỏi Dân IT" />
-  <title>Manage product</title>rel="stylesheet" />
+  <title>Manage user</title>rel="stylesheet" />
   <link href="/admin/css/styles.css" rel="stylesheet" />
   <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
 </head>
@@ -25,7 +25,54 @@
                 <li class="breadcrumb-item"><a href="/admin">Dashboard</a></li>
                 <li class="breadcrumb-item active">Products</li>
               </ol>
-              <div>table products</div>
+              <div>
+                <div style="margin-top: 10px; display: flex; justify-content: space-between">
+                  <h3>Table products:</h3>
+                  <div><a href="/admin/create-product" class="btn btn-primary">Create new product</a></div>
+                </div>
+
+                <hr />
+
+                <table class="table table-hover table-bordered">
+                  <thead>
+                    <tr>
+                      <th scope="col">ID</th>
+                      <th scope="col">Name</th>
+                      <th scope="col">Price</th>
+                      <th scope="col">Factory</th>
+                      <th scope="col">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% products.forEach((product)=> { %>
+                      <tr>
+                        <th scope="row">
+                          <%= product.id %>
+                        </th>
+                        <td>
+                          <%= product.name %>
+                        </td>
+                        <td>
+                          <%= product.price %>
+                        </td>
+                        <td>
+                          <%= product.factory %>
+                        </td>
+                        <td>
+                          <div style="display: flex;">
+                            <form action="/admin/view-product/<%= product.id %>" method="get">
+                              <button class="btn btn-warning">View</button>
+                            </form>
+                            <form action="/admin/delete-product/<%= product.id %>" method="post">
+                              <button class="btn btn-danger">Delete</button>
+                            </form>
+                          </div>
+                        </td>
+                      </tr>
+                      <% }) %>
+                  </tbody>
+                </table>
+              </div>
             </div>
 
           </main>

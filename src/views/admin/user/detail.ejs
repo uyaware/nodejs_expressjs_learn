@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta name="description" content="Hỏi Dân IT - Dự án laptopshop" />
+  <meta name="author" content="Hỏi Dân IT" />
+  <title>Create user</title>rel="stylesheet" />
+  <link href="/admin/css/styles.css" rel="stylesheet" />
+  <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script>
+    $(document).ready(() => {
+      const avatarFile = $("#avatarFile");
+      avatarFile.change(function (e) {
+        const imgURL = URL.createObjectURL(e.target.files[0]);
+        $("#avatarPreview").attr("src", imgURL);
+        $("#avatarPreview").css({ "display": "block" });
+      });
+    });
+  </script>
+
+</head>
+
+<body class="sb-nav-fixed">
+  <%- include('../layout/header'); -%>
+
+    <div id="layoutSidenav">
+      <%- include('../layout/sidenav'); -%>
+        <div id="layoutSidenav_content">
+          <main>
+            <div class="container-fluid px-4">
+              <h1 class="mt-4">Manage Users</h1>
+              <ol class="breadcrumb mb-4">
+                <li class="breadcrumb-item"><a href="/admin">Dashboard</a></li>
+                <li class="breadcrumb-item active"><a href="/admin/user">Users</a></li>
+              </ol>
+
+              <div
+                style="width: 60%; max-width: 600px; margin: 10px auto; border: solid 1px rgba(0,0,0,0.3); border-radius: 15px; padding: 20px">
+                <h3 style="margin-bottom: 20px">User's details</h3>
+                <form action="/admin/update-user" method="post" enctype="multipart/form-data">
+                  <input name="id" type="hidden" value="<%= user.id %>">
+
+                  <div class="mb-3">
+                    <label for="fullName" class="form-label">Full name</label>
+                    <input value="<%= user.fullName %>" name="fullName" type="text" class="form-control" id="name">
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input value="<%= user.username %>" name="username" type="email" class="form-control" id="email"
+                      disabled>
+                  </div>
+                  <div class="row">
+                    <div class="mb-3 col-6">
+                      <label class="form-label">Phone</label>
+                      <input value="<%= user.phone %>" type="text" class="form-control" name="phone">
+                    </div>
+
+                    <div class="mb-3 col-6">
+                      <label class="form-label">Role</label>
+                      <select name="role" class="form-select">
+                        <% roles.forEach((role)=> { %>
+                          <option value="<%= role.id %>" <%=user.roleId===role.id ? 'selected' : '' %>>
+                            <%= role.name %>
+                          </option>
+                          <% }) %>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="formFile" class="form-label">Avatar</label>
+                    <input class="form-control" type="file" id="avatarFile" accept=".png, .jpg, .jpeg" name="avatar" />
+
+                    <img style="max-height: 250px; max-width: 90%; display: block;" alt="avatar preview"
+                      id="avatarPreview" src="/images/<%= user.avatar %>" />
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="address" class="form-label">Address</label>
+                    <input value="<%= user.address %>" name="address" type="text" class="form-control" id="address"
+                      placeholder="Your address">
+                  </div>
+
+                  <div class="mb-3">
+                    <button type="submit" class="btn btn-primary form-control">Update</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+
+          </main>
+          <%- include('../layout/footer'); -%>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+      crossorigin="anonymous"></script>
+    <script src="/admin/js/scripts.js"></script>
+</body>
+
+</html>

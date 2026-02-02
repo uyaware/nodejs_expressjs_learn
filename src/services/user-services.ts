@@ -1,18 +1,27 @@
-import getConnection from "@/config/db";
 import { prisma } from "@/config/client";
+import { ACCOUNT_TYPE } from "@/config/constant";
+import hashPassword from "@/utils/hashPassword";
 
 export async function handleCreateUser(
-  name: string,
-  email: string,
+  fullName: string,
+  username: string,
   address: string,
+  phone: string,
+  avatar: string,
+  roleId: number,
 ) {
+  const defaultPassword = await hashPassword("123456");
+
   await prisma.user.create({
     data: {
-      fullName: name,
-      username: email,
-      password: "123",
-      accountType: "SYSTEM",
+      fullName,
+      username,
+      password: defaultPassword,
+      accountType: ACCOUNT_TYPE.SYSTEM,
       address,
+      avatar,
+      phone,
+      roleId,
     },
   });
 }
@@ -34,27 +43,38 @@ export async function handleDeleteUser(id: number) {
 }
 
 export async function handleViewUser(id: number) {
-  return await prisma.user.findUnique({
+  const roles = await prisma.role.findMany();
+
+  const user = await prisma.user.findUnique({
     where: {
       id,
     },
   });
+
+  return {
+    user,
+    roles,
+  };
 }
 
 export async function handleUpdateUserById(
-  id: string,
-  name: string,
-  email: string,
+  id: number,
+  fullName: string,
   address: string,
+  phone: string,
+  avatar: string,
+  roleId: number,
 ) {
   await prisma.user.update({
     where: {
-      id: +id,
+      id,
     },
     data: {
-      fullName: name,
-      username: email,
+      fullName,
       address,
+      phone,
+      avatar,
+      roleId,
     },
   });
 }

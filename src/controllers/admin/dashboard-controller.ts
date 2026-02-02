@@ -12,10 +12,6 @@ export async function getAdminUserPage(req: Request, res: Response) {
   });
 }
 
-export function getAdminProductPage(req: Request, res: Response) {
-  return res.render("admin/product/show.ejs");
-}
-
 export function getAdminOrderPage(req: Request, res: Response) {
   return res.render("admin/order/show.ejs");
 }

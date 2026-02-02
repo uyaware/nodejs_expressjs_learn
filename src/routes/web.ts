@@ -10,39 +10,66 @@ import {
 } from "@/controllers/user-controller";
 import {
   getAdminOrderPage,
-  getAdminProductPage,
   getAdminUserPage,
   getDashboardPage,
 } from "@/controllers/admin/dashboard-controller";
-import multer from "multer";
-
-const upload = multer({ dest: "uploads/" });
+import fileUploadMiddleware from "@/middleware/multer-file-upload";
+import {
+  getAdminProductPage,
+  getAdminCreateProductPage,
+  postCreateProduct,
+  getViewProduct,
+  postUpdateProduct,
+  postDeleteProduct,
+} from "@/controllers/admin/product-controller";
+import { getProductDetailClient } from "@/controllers/client/product-client-controller";
 
 const router = express.Router();
 
 export default function webRoutes(app: Express) {
-  router.get("/", getHomePage);
-  router.post("/handle-delete-user/:id", postDeleteUser);
-  router.get("/handle-view-user/:id", getViewUser);
-  router.post("/handle-update-user", postUpdateUser);
-
-  // admin routes
+  //-------------- admin routes
   router.get("/admin", getDashboardPage);
 
+  // admin user
   router.get("/admin/user", getAdminUserPage);
   router.get("/admin/create-user", getCreateUserPage);
-  // router.post("/admin/handle-create-user", postCreateUser);
-
   router.post(
-    "/admin/handle-create-user",
-    upload.single("avatar"),
-    (req, res) => {
-      res.send("ok");
-    },
+    "/admin/create-user",
+    fileUploadMiddleware("avatar"),
+    postCreateUser,
+  );
+  router.post("/admin/delete-user/:id", postDeleteUser);
+  router.get("/admin/view-user/:id", getViewUser);
+  router.post(
+    "/admin/update-user",
+    fileUploadMiddleware("avatar"),
+    postUpdateUser,
   );
 
+  // admin product
   router.get("/admin/product", getAdminProductPage);
+  router.get("/admin/create-product", getAdminCreateProductPage);
+  router.post(
+    "/admin/create-product",
+    fileUploadMiddleware("image", "images/products"),
+    postCreateProduct,
+  );
+  router.get("/admin/view-product/:id", getViewProduct);
+  router.post(
+    "/admin/update-product",
+    fileUploadMiddleware("image", "images/products"),
+    postUpdateProduct,
+  );
+  router.post("/admin/delete-product/:id", postDeleteProduct) 
+
+  // admin order
   router.get("/admin/order", getAdminOrderPage);
+
+  //-------------- client
+  router.get("/", getHomePage);
+
+  // client product
+  router.get("/product/:id", getProductDetailClient);
 
   // base url (ex: base: '/abc' 'localhost:3000/hello' => 'localhost:3000/abc/hello');
   app.use("/", router);
