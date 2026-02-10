@@ -23,6 +23,7 @@ import {
   postDeleteProduct,
 } from "@/controllers/admin/product-controller";
 import { getProductDetailClient } from "@/controllers/client/product-client-controller";
+import { getLoginPage, getRegisterPage, postRegister } from "@/controllers/client/auth-controller";
 
 const router = express.Router();
 
@@ -67,9 +68,14 @@ export default function webRoutes(app: Express) {
 
   //-------------- client
   router.get("/", getHomePage);
+  router.get("/login", getLoginPage);
+  router.get("/register", getRegisterPage);
 
   // client product
   router.get("/product/:id", getProductDetailClient);
+
+  //--------------- auth 
+  router.post("/register", postRegister)
 
   // base url (ex: base: '/abc' 'localhost:3000/hello' => 'localhost:3000/abc/hello');
   app.use("/", router);

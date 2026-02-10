@@ -14,14 +14,19 @@ app.set('views', 'src/views');
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// config static files
+app.use(express.static('public'));
+
 // config routes
 webRoutes(app);
 
 // seed data
 initData();
 
-// config static files
-app.use(express.static('public'));
+// handle 404 not found
+app.use((req, res) => {
+  res.send('404 not found');
+})
 
 // domain expansion
 app.listen(port, () => {
